@@ -56,7 +56,7 @@ export default function Footer() {
             </h3>
 
             <p className="text-gray-300 text-sm">
-              Email: support@crimeportal.gov.in
+              Email: ng968633@gmail.com
             </p>
 
             <p className="text-gray-300 text-sm">

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
 
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -16,7 +18,7 @@ export default function Login() {
   const num1 = 8;
   const num2 = 5;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     setError("");
@@ -52,7 +54,48 @@ export default function Login() {
       return;
     }
 
-    alert(isLogin ? "Login Successful!" : "Registration Successful!");
+    // alert(isLogin ? "Login Successful!" : "Registration Successful!");
+    try {
+  const url = isLogin
+    ? "http://localhost:5000/api/auth/login"
+    : "http://localhost:5000/api/auth/register";
+
+  const payload = isLogin
+    ? {
+        mobile,
+        password,
+      }
+    : {
+        fullName,
+        mobile,
+        password,
+      };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    setError(data.message);
+    return;
+  }
+
+  if (isLogin) {
+    localStorage.setItem("token", data.token);
+    router.push("/dashboard");
+  } else {
+    alert("Registration Successful");
+    setIsLogin(true);
+  }
+} catch (error) {
+  setError("Server Error");
+}
   };
 
   return (

@@ -19,9 +19,10 @@ export default function Dashboard() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // validation
     if (
       !formData.name ||
       !formData.crimeType ||
@@ -32,35 +33,45 @@ export default function Dashboard() {
       return;
     }
 
-    setMessage("Complaint submitted successfully!");
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/complaints", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    console.log(formData);
+      const data = await res.json();
 
-    setFormData({
-      name: "",
-      crimeType: "",
-      location: "",
-      description: "",
-    });
+      if (res.ok) {
+        setMessage(data.message || "Complaint submitted successfully!");
+
+        setFormData({
+          name: "",
+          crimeType: "",
+          location: "",
+          description: "",
+        });
+      } else {
+        setMessage(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      setMessage("Server error");
+    }
   };
 
   return (
     <main className="min-h-screen px-4 py-10">
       <div className="max-w-5xl mx-auto">
 
-        {/* Welcome Card */}
         <div className="bg-gradient-to-r from-blue-900 to-indigo-800 text-white rounded-2xl p-8 shadow-xl mb-8">
-          <h1 className="text-4xl font-bold">
-            User Dashboard
-          </h1>
-
+          <h1 className="text-4xl font-bold">User Dashboard</h1>
           <p className="mt-3 text-blue-100">
             Welcome to the Online Crime Reporting Portal.
-            Submit your complaint below.
           </p>
         </div>
 
-        {/* Complaint Form */}
         <div className="bg-white rounded-2xl shadow-xl p-8">
 
           <h2 className="text-3xl font-bold text-blue-900 mb-6">
@@ -73,90 +84,59 @@ export default function Dashboard() {
             </div>
           )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5"
-          >
-            <div>
-              <label className="block mb-2 font-medium">
-                Full Name
-              </label>
+          <form onSubmit={handleSubmit} className="space-y-5">
 
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter your full name"
-                className="w-full border rounded-lg p-3"
-              />
-            </div>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Full Name"
+              className="w-full border p-3 rounded-lg"
+            />
 
-            <div>
-              <label className="block mb-2 font-medium">
-                Crime Type
-              </label>
+            <select
+              name="crimeType"
+              value={formData.crimeType}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg"
+            >
+              <option value="">Select Crime Type</option>
+              <option>Cyber Crime</option>
+              <option>Fraud</option>
+              <option>Harassment</option>
+              <option>Theft</option>
+              <option>Women Safety</option>
+              <option>Other</option>
+            </select>
 
-              <select
-                name="crimeType"
-                value={formData.crimeType}
-                onChange={handleChange}
-                className="w-full border rounded-lg p-3"
-              >
-                <option value="">
-                  Select Crime Type
-                </option>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              placeholder="Location"
+              className="w-full border p-3 rounded-lg"
+            />
 
-                <option>Cyber Crime</option>
-                <option>Fraud</option>
-                <option>Harassment</option>
-                <option>Theft</option>
-                <option>Women Safety</option>
-                <option>Other</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block mb-2 font-medium">
-                Incident Location
-              </label>
-
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="Enter incident location"
-                className="w-full border rounded-lg p-3"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-2 font-medium">
-                Description
-              </label>
-
-              <textarea
-                rows="6"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Describe the incident in detail..."
-                className="w-full border rounded-lg p-3"
-              />
-            </div>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Description"
+              className="w-full border p-3 rounded-lg"
+            />
 
             <button
               type="submit"
-              className="bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold"
+              className="bg-blue-900 text-white px-8 py-3 rounded-lg"
             >
               Submit Complaint
             </button>
+
           </form>
+
         </div>
-
-       
-
       </div>
     </main>
   );
