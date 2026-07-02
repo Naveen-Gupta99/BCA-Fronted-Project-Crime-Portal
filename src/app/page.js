@@ -5,19 +5,19 @@ export default function Home() {
   
   const services = [
     {
-      img: "/112.jfif",
+      img: "/112.png",
       title: "112",
       desc: "Dial 112 for any emergency requiring police assistance.",
       link: "https://112.up.gov.in/About112UPApp",
     },
     {
-      img: "/1090.jfif",
+      img: "/1090.png",
       title: "1090",
       desc: "1090 for women safety and harassment-related complaints.",
       link:"https://www.digitalindia.gov.in/initiative/ncw-womens-helpline/",
     },
     {
-      img: "/101.jfif",
+      img: "/101.png",
       title: "101",
       desc: "101 for fire emergency.",
       link : "https://www.india.gov.in/directory/helpline",
