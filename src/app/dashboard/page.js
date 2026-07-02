@@ -34,7 +34,7 @@ export default function Dashboard() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/complaints", {
+      const res = await fetch("https://bca-project-backend-online-crime.onrender.com/api/auth/complaints", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
